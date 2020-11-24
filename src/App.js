@@ -1,5 +1,6 @@
 import React, { Fragment, useRef, useState, useEffect } from "react";
 import { Counter } from "./components/Counter";
+import { LoginForm } from "./components/LoginForm";
 import MapContainer from "./components/MapContainer";
 
 const fectPlace = (place, setApiResult, apiUrl) => {
@@ -48,8 +49,9 @@ const App = () => {
 
   return (
     <Fragment>
-      <h2>Get the latest hospital in your proximity</h2>
-      <MapContainer />
+      <LoginForm />
+      {/* <h2>Get the latest hospital in your proximity</h2> */}
+      {/* <MapContainer />
       <form onSubmit={handleHospitalSearch}>
         <input
           type="text"
@@ -64,7 +66,7 @@ const App = () => {
       </form>
       <ul ref={hospitalList}>{myResultList}</ul>
       <p>Api search result:</p>
-      <pre>{JSON.stringify(apiResult, null, 2)}</pre>
+      <pre>{JSON.stringify(apiResult, null, 2)}</pre> */}
       <Counter />
     </Fragment>
   );

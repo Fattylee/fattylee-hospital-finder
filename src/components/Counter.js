@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import styled from "./Counter.module.css";
 import { Button } from "./Button";
+import { createTodo } from "../api";
 
 export const Counter = ({ label = "nothing much" }) => {
   const [counter, setCounter] = useState(0);
@@ -33,6 +34,28 @@ export function Todo({ todos: initialTodos = [{ id: 123, todo: "code!!" }] }) {
   const [todo, setTodo] = useState("");
   const inputRef = useRef(null);
 
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    console.log("submitted");
+    console.log(inputRef.current.value);
+    const todo = inputRef?.current?.value.trim();
+
+    if (todo) {
+      const newTodo = { id: Date.now(), todo };
+      try {
+        const persistedTodo = await createTodo("/todo", newTodo);
+        setTodos((prevTodo) => [...prevTodo, persistedTodo]);
+
+        // clear todo input : uncontrolled input
+        inputRef.current.value = "";
+        // clear todo input : controlled input
+        setTodo("");
+      } catch (ex) {
+        console.log(ex);
+      }
+    }
+  };
+
   return (
     <div>
       <h2>Todo List:</h2>
@@ -42,24 +65,7 @@ export function Todo({ todos: initialTodos = [{ id: 123, todo: "code!!" }] }) {
         ))}
       </ul>
 
-      <form
-        data-testid="form"
-        onSubmit={(e) => {
-          e.preventDefault();
-          console.log("submitted");
-          console.log(inputRef.current.value);
-          const todo = inputRef?.current?.value.trim();
-
-          if (todo) {
-            setTodos((prevTodo) => [...prevTodo, { id: Date.now(), todo }]);
-
-            // clear todo input : uncontrolled input
-            inputRef.current.value = "";
-            // clear todo input : controlled input
-            setTodo("");
-          }
-        }}
-      >
+      <form data-testid="form" onSubmit={handleFormSubmit}>
         <label htmlFor="message">Enter some message</label>
         <input
           type="text"
