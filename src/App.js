@@ -1,7 +1,8 @@
 import React, { Fragment, useRef, useState, useEffect } from "react";
+import { AppRoute } from "./AppRoute";
 import { Counter } from "./components/Counter";
 import { LoginForm } from "./components/LoginForm";
-import MapContainer from "./components/MapContainer";
+// import MapContainer from "./components/MapContainer";
 
 const fectPlace = (place, setApiResult, apiUrl) => {
   fetch(apiUrl)
@@ -41,15 +42,25 @@ const App = () => {
     fectPlace(hospitalName, setApiResult, test);
   };
 
-  const myResultList = hospitalNames.map((hospital, index) => (
-    <li key={index}>{hospital}</li>
-  ));
+  // const myResultList = hospitalNames.map((hospital, index) => (
+  //   <li key={index}>{hospital}</li>
+  // ));
+
   // console.log("see process env below");
   // console.log(process.env);
 
+  const defaultLoginFormProps = {
+    onHandleUsername: (username) => console.log(username, "=====woooo="),
+    onHandlePassword() {},
+    onHandleRememberme() {},
+    onHandleSubmit() {},
+  };
   return (
     <Fragment>
-      <LoginForm />
+      <AppRoute>
+        <LoginForm {...defaultLoginFormProps} />
+        <Counter />
+      </AppRoute>
       {/* <h2>Get the latest hospital in your proximity</h2> */}
       {/* <MapContainer />
       <form onSubmit={handleHospitalSearch}>
@@ -67,7 +78,6 @@ const App = () => {
       <ul ref={hospitalList}>{myResultList}</ul>
       <p>Api search result:</p>
       <pre>{JSON.stringify(apiResult, null, 2)}</pre> */}
-      <Counter />
     </Fragment>
   );
 };

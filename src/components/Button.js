@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "./Counter.module.css";
 
 export const Button = ({ increment, onHandleClick }) => {
@@ -7,7 +7,7 @@ export const Button = ({ increment, onHandleClick }) => {
   };
 
   return (
-    <button className={styled.btn} onClick={handleClick}>
+    <button data-testid="btn" className={styled.btn} onClick={handleClick}>
       {increment}+
     </button>
   );

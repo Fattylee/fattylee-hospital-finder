@@ -2,9 +2,13 @@ const createTodo = (todoPath = "/todos", todo) => {
   return new Promise((resolve, reject) => {
     if (todoPath.includes("todo")) {
       console.log("=============Real createTodo api=============");
-      return resolve(todo);
+      setTimeout(() => {
+        console.log("========after 3s=========");
+        return resolve(todo);
+      });
+    } else {
+      reject("failed to include a todo in the route");
     }
-    reject("failed to include a todo in the route");
   });
 };
 

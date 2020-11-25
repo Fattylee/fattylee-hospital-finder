@@ -7,25 +7,26 @@ export const LoginForm = (prop) => {
 
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
-    // prop.onHandleUsername(username);
+    prop.onHandleUsername(e.target.value);
   };
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
-    // prop.onHandlePassword(password);
+    prop.onHandlePassword(password);
   };
   const handleRememberMe = (e) => {
     setRememberme(e.target.checked);
-    // prop.onHandleRememberme(rememberme);
+    prop.onHandleRememberme(e.target.checked);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // prop.onHandleSubmit(username, password, rememberme);
+    prop.onHandleSubmit(username, password, rememberme);
   };
 
   return (
     <div>
+      <h2>{username}</h2>
       <form data-testid="login-form" onSubmit={handleSubmit}>
         <label htmlFor="username">Username</label>
         <input
