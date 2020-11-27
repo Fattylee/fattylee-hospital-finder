@@ -1,6 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const { isAuthorized } = require("./middlewares/isAuthorized");
 const { auth } = require("./routes/auth");
+const { productRoute } = require("./routes/product");
 const { errorHandler } = require("./utils/errorHandlerMiddleware");
 
 const app = express();
@@ -9,42 +11,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/v1/auth", auth);
-const port = process.env.PORT || 5000;
+
+// protected route
+app.use("/api/v1/products", isAuthorized, productRoute);
 
 app.use(errorHandler);
 
-// app.use((ex, req, res, next) => {
-//   // console.log(JSON.stringify(ex));
-//   console.log(ex);
-//   console.log("==========================================");
-
-//   if (ex.code === 11000) {
-//     const field = ex.keyValue.username ? "Username" : "Email";
-
-//     return res.status(409).send({
-//       errorr: {
-//         message: `${field} '${
-//           ex.keyValue[field.toLocaleLowerCase()]
-//         }' already taken`,
-//       },
-//     });
-//   }
-
-//   if (ex.errMsg) {
-//     return res.status(ex.status).send({
-//       errorr: {
-//         message: ex.errMsg,
-//       },
-//     });
-//   }
-
-//   res.status(500).send({
-//     errorr: {
-//       message: ex.message,
-//     },
-//   });
-// });
-
+const port = process.env.PORT || 5000;
 mongoose
   .connect("mongodb://localhost/bezkoder", {
     useCreateIndex: true,
