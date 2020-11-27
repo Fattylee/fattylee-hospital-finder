@@ -1,5 +1,27 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Switch,
+  Redirect,
+} from "react-router-dom";
+
+class Auth {
+  constructor() {
+    this.authenticated = false;
+  }
+  login() {
+    this.authenticated = true;
+  }
+  logout() {
+    this.authenticated = false;
+  }
+  get isAuthenticated() {
+    return this.authenticated;
+  }
+}
+const auth = new Auth();
 
 let randValue = Math.ceil(Math.random() * 100);
 const posts = [
@@ -16,6 +38,40 @@ const posts = [
     name: "Abdullah ibn AbdulFattah",
   },
 ];
+
+const Logout = (props) => (
+  <button
+    onClick={() => {
+      auth.logout();
+      props.history.push("/");
+    }}
+  >
+    logout
+  </button>
+);
+
+const About = (props) => {
+  console.log(props);
+  return (
+    <div>
+      <h2>About page</h2>
+    </div>
+  );
+};
+
+const ProtectedRoute = ({ component: Component, ...rest }) => {
+  return (
+    <Route
+      {...rest}
+      render={(props) => {
+        if (auth.isAuthenticated) {
+          return <Component {...props} />;
+        }
+        return <Redirect to="/" />;
+      }}
+    />
+  );
+};
 
 export const AppRoute = ({ children }) => (
   <Router>
@@ -36,47 +92,69 @@ export const AppRoute = ({ children }) => (
       <Route
         exact
         path="/"
-        component={() => (
+        component={(props) => (
           <div>
             <h1>Home page</h1>
-            <p>nothing happen</p>
+            <p>
+              {!auth.isAuthenticated ? (
+                <button
+                  onClick={() => {
+                    auth.login();
+                    props.history.push("/posts");
+                  }}
+                >
+                  login
+                </button>
+              ) : (
+                <Logout {...props} />
+              )}
+            </p>
           </div>
         )}
       />
 
       <Route
         path="/(abouts?|us)"
-        component={() => (
-          <div>
-            <h2>About page</h2>
-          </div>
-        )}
+        component={(props) => {
+          if (props.history.location.pathname === "/about") {
+            // props.history.push("posts");
+            // return <Redirect to="post"  />;
+          }
+          return <About {...props} />;
+        }}
       />
 
-      <Route
+      <ProtectedRoute
         exact
         path="/posts"
-        render={() => (
+        component={(props) => (
           <h3>
             Post: all posts
+            <Logout {...props} />
             <br />
             {JSON.stringify(posts)}
           </h3>
         )}
       />
 
-      <Route
+      <ProtectedRoute
         exact
         path="/posts/:id"
-        render={({
+        component={({
           match: {
             params: { id },
           },
+          ...rest
         }) => {
           const post = posts.find((post) => post.id === +id);
           const name = post ? post.name : "No name";
 
-          return <h1>Post: single post: {name}</h1>;
+          return (
+            <h1>
+              Post: single post: {name}
+              <Logout {...rest} match={{ params: { id } }} />
+            </h1>
+          );
         }}
       />
 

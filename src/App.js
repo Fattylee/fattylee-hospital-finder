@@ -2,6 +2,7 @@ import React, { Fragment, useRef, useState, useEffect } from "react";
 import { AppRoute } from "./AppRoute";
 import { Counter } from "./components/Counter";
 import { LoginForm } from "./components/LoginForm";
+import "./redux";
 // import MapContainer from "./components/MapContainer";
 
 const fectPlace = (place, setApiResult, apiUrl) => {
@@ -52,7 +53,9 @@ const App = () => {
   const defaultLoginFormProps = {
     onHandleUsername: (username) => console.log(username, "=====woooo="),
     onHandlePassword() {},
-    onHandleRememberme() {},
+    onHandleRememberme(checked) {
+      // console.log(checked);
+    },
     onHandleSubmit() {},
   };
   return (

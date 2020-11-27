@@ -5,23 +5,35 @@ export const LoginForm = (prop) => {
   const [password, setPassword] = useState("");
   const [rememberme, setRememberme] = useState(true);
 
-  const handleUsernameChange = (e) => {
-    setUsername(e.target.value);
-    prop.onHandleUsername(e.target.value);
-  };
+  const handleChange = (e) => {
+    const { name, value, id, type, checked } = e.target;
+    console.log(name, value, id, type, checked);
 
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-    prop.onHandlePassword(password);
-  };
-  const handleRememberMe = (e) => {
-    setRememberme(e.target.checked);
-    prop.onHandleRememberme(e.target.checked);
+    if (name === "username") {
+      setUsername(value);
+      prop.onHandleUsername(value);
+    } else if (name === "password") {
+      setPassword(value);
+      prop.onHandlePassword(value);
+    } else if (name === "rememberme") {
+      setRememberme(checked);
+      prop.onHandleRememberme(checked);
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     prop.onHandleSubmit(username, password, rememberme);
+    const input = e.target.elements;
+    // u can get form element by name or id value
+    console.log(input["username"]);
+    clearForm();
+  };
+
+  const clearForm = () => {
+    setPassword("");
+    setUsername("");
+    setRememberme(false);
   };
 
   return (
@@ -35,7 +47,7 @@ export const LoginForm = (prop) => {
           data-testid="username"
           id="username"
           value={username}
-          onChange={handleUsernameChange}
+          onChange={handleChange}
         />
         <br />
         <label htmlFor="password">
@@ -46,7 +58,7 @@ export const LoginForm = (prop) => {
             data-testid="password"
             id="password"
             value={password}
-            onChange={handlePasswordChange}
+            onChange={handleChange}
           />
         </label>
         <br />
@@ -58,9 +70,10 @@ export const LoginForm = (prop) => {
             data-testid="rememberme"
             id="rememberme"
             checked={rememberme}
-            onChange={handleRememberMe}
+            onChange={handleChange}
           />
         </label>
+        <button>Submit</button>
       </form>
     </div>
   );
