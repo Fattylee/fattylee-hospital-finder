@@ -1,6 +1,6 @@
 const express = require("express");
-const { User } = require("../models");
-const { NotFound, BadRequest, Conflict } = require("../utils/error");
+const { User } = require("../models/user");
+const { NotFound, BadRequest } = require("../utils/error");
 
 const route = express.Router();
 
@@ -14,16 +14,6 @@ route.post("/register", async (req, res, next) => {
       token: newUser.genAuthToken(),
     });
   } catch (ex) {
-    if (ex.code === 11000) {
-      const field = ex.keyValue.username ? "Username" : "Email";
-      next(
-        new Conflict(
-          `${field}: '${ex.keyValue[field.toLocaleLowerCase()]}' already taken`
-        )
-      );
-    } else if (ex.message.includes("validation")) {
-      next(new BadRequest(ex.message));
-    }
     next(ex);
   }
 });
@@ -36,9 +26,8 @@ route.post("/login", async (req, res, next) => {
 
     if (!user) throw new NotFound("User not found");
 
-    if (!(await user.verifyPassword(password))) {
+    if (!(await user.verifyPassword(password)))
       throw new BadRequest("Invalid password");
-    }
 
     return res.status(201).send({
       message: "successful",

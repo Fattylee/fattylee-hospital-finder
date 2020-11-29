@@ -3,7 +3,7 @@ const validator = require("validator");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
-const UserSchema = new mongoose.Schema({
+const userSchema = mongoose.Schema({
   username: {
     type: String,
     unique: true,
@@ -31,27 +31,31 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
-UserSchema.methods.verifyPassword = function verifyPassword(password) {
+userSchema.methods.verifyPassword = function verifyPassword(password) {
   return bcrypt.compare(password, this.password);
 };
 
-UserSchema.methods.userResponse = function toJSON() {
+userSchema.methods.userResponse = function toJSON() {
   const { username, email } = this;
   return { _id: this.id, username, email, _v: this.__v };
 };
 
-UserSchema.pre("save", async function hook() {
+userSchema.pre("save", async function hook() {
   const user = this;
   if (!user.isModified("password")) return;
 
   user.password = await bcrypt.hash(user.password, 10);
 });
 
-UserSchema.methods.genAuthToken = function genAuthToken() {
+userSchema.methods.genAuthToken = function genAuthToken() {
   const user = this;
-  const { id, username } = user;
-  const payload = { id, username };
-  return jwt.sign(payload, "mySuperSecret", { expiresIn: "7d" });
+  const { id: userId, username } = user;
+  const payload = { userId, username };
+  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "7d" });
 };
 
-exports.User = mongoose.model("User", UserSchema);
+userSchema.virtual("info").get(function () {
+  return `My username is ${this.username}`;
+});
+
+exports.User = mongoose.model("User", userSchema);

@@ -1,4 +1,17 @@
-const { GeneralError } = require("./error");
+const { GeneralError, BadRequest, Conflict } = require("./error");
+
+exports.mongooseErrorHandler = (err, req, res, next) => {
+  if (err.message.includes("validation")) next(new BadRequest(err.message));
+  else if (err.code === 11000) {
+    const field = err.keyValue.username ? "Username" : "Email";
+    next(
+      new Conflict(
+        `${field}: '${err.keyValue[field.toLocaleLowerCase()]}' already taken`
+      )
+    );
+  }
+  next(err);
+};
 
 exports.errorHandler = (error, req, res, next) => {
   const baseErrorResponse = {
@@ -33,6 +46,7 @@ exports.errorHandler = (error, req, res, next) => {
     statusText: "Internal Server Error",
   };
 
+  // log the error to the server
   console.log({ ...restErrorResponse, stack: error.stack });
 
   if (process.env.NODE_ENV !== "production") {

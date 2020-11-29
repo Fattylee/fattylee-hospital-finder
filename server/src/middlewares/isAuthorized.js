@@ -6,7 +6,7 @@ exports.isAuthorized = (req, _, next) => {
   if (!auth) next(new Unauthorize("No authorization token supplied"));
   const token = auth.replace(/bearer\s+/i, "");
   try {
-    jwt.verify(token, "mySuperSecret");
+    req.user = jwt.verify(token, process.env.JWT_SECRET);
     next();
   } catch (ex) {
     if (ex instanceof jwt.JsonWebTokenError) {

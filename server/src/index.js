@@ -1,9 +1,15 @@
+const { join } = require("path");
+require("dotenv").config({
+  path: join(process.cwd(), ".env.server"),
+});
 const express = require("express");
 const mongoose = require("mongoose");
-const { isAuthorized } = require("./middlewares/isAuthorized");
 const { auth } = require("./routes/auth");
 const { productRoute } = require("./routes/product");
-const { errorHandler } = require("./utils/errorHandlerMiddleware");
+const {
+  errorHandler,
+  mongooseErrorHandler,
+} = require("./utils/errorHandlerMiddleware");
 
 const app = express();
 
@@ -12,9 +18,9 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/v1/auth", auth);
 
-// protected route
-app.use("/api/v1/products", isAuthorized, productRoute);
+app.use("/api/v1/products", productRoute);
 
+app.use(mongooseErrorHandler);
 app.use(errorHandler);
 
 const port = process.env.PORT || 5000;
