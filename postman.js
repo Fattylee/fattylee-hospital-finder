@@ -8,28 +8,13 @@ axios = axios.create({ baseURL: "http://localhost:5000/api/v1" });
     //   username: "fattyleezs",
 
     //   password: "password",
+
     //   email: "f63atai4humility@yahoo.com",
     // });
-    const {
-      data: { token },
-    } = await axios.post("/auth/login", {
-      username: "fattylee",
 
-      password: "password",
-    });
-    console.log(token, "==");
+    const token = await login();
 
-    const { data } = await axios.post(
-      "/products?OWNer=True",
-
-      { title: "rice" },
-
-      {
-        headers: {
-          authorization: `bearer                 ${token}`,
-        },
-      }
-    );
+    const data = await createProduct(token);
 
     console.log(data);
 
@@ -38,3 +23,29 @@ axios = axios.create({ baseURL: "http://localhost:5000/api/v1" });
     console.log(ex.response.data);
   }
 })();
+
+async function login() {
+  const {
+    data: { token },
+  } = await axios.post("/auth/login", {
+    username: "fattylee",
+    password: "password",
+  });
+  console.log(token, "==");
+  return token;
+}
+
+async function createProduct(token) {
+  const { data } = await axios.post(
+    "/products?OWNer=",
+
+    { title: "rice", price: 5 },
+
+    {
+      headers: {
+        authorization: `bearer     ${token}`,
+      },
+    }
+  );
+  return data;
+}

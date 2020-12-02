@@ -1,7 +1,7 @@
-const jwt = require("jsonwebtoken");
-const { Unauthorize } = require("../utils/error");
+import jwt from "jsonwebtoken";
+import { Unauthorize } from "../utils/error.js";
 
-exports.isAuthorized = (req, _, next) => {
+export const isAuthorized = (req, _, next) => {
   const auth = req.headers.authorization;
   if (!auth) next(new Unauthorize("No authorization token supplied"));
   const token = auth.replace(/bearer\s+/i, "");

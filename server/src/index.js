@@ -1,15 +1,17 @@
-const { join } = require("path");
-require("dotenv").config({
-  path: join(process.cwd(), ".env.server"),
-});
-const express = require("express");
-const mongoose = require("mongoose");
-const { auth } = require("./routes/auth");
-const { productRoute } = require("./routes/product");
-const {
+import { join } from "path";
+import { config } from "dotenv";
+import express from "express";
+import mongoose from "mongoose";
+import { auth } from "./routes/auth.js";
+import { productRoute } from "./routes/product.js";
+import {
   errorHandler,
   mongooseErrorHandler,
-} = require("./utils/errorHandlerMiddleware");
+} from "./utils/errorHandlerMiddleware.js";
+
+config({
+  path: join(process.cwd(), ".env.server"),
+});
 
 const app = express();
 

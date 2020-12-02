@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
-const validator = require("validator");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
+import mongoose from "mongoose";
+import validator from "validator";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 
 const userSchema = mongoose.Schema({
   username: {
@@ -29,6 +29,12 @@ const userSchema = mongoose.Schema({
     minlength: 5,
     required: true,
   },
+  fans: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
+    },
+  ],
 });
 
 userSchema.methods.verifyPassword = function verifyPassword(password) {
@@ -58,4 +64,4 @@ userSchema.virtual("info").get(function () {
   return `My username is ${this.username}`;
 });
 
-exports.User = mongoose.model("User", userSchema);
+export const User = mongoose.model("User", userSchema);

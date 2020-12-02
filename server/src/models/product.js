@@ -1,5 +1,4 @@
-const mongoose = require("mongoose");
-const validator = require("validator");
+import mongoose from "mongoose";
 
 const productSchema = mongoose.Schema({
   title: {
@@ -11,11 +10,12 @@ const productSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
-    // validate: {
-    //   validator: validator.isMongoId,
-    //   message: "{VALUE} this is wrong",
-    // },
+  },
+  price: {
+    type: Number,
+    required: true,
+    default: 0,
   },
 });
 
-exports.Product = mongoose.model("Product", productSchema);
+export const Product = mongoose.model("Product", productSchema);

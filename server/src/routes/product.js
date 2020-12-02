@@ -1,9 +1,10 @@
-const mongoose = require("mongoose");
-const { Router } = require("express");
-const { isAuthorized } = require("../middlewares/isAuthorized");
-const { Product } = require("../models/product");
-const { Forbidden } = require("../utils/error");
-const { User } = require("../models/user");
+import mongoose from "mongoose";
+import { Router } from "express";
+import { isAuthorized } from "../middlewares/isAuthorized.js";
+import { Product } from "../models/product.js";
+import { Forbidden, BadRequest } from "../utils/error.js";
+import { User } from "../models/user.js";
+
 const route = Router();
 
 const products = [
@@ -43,14 +44,23 @@ route.get("/:id", (req, res, next) => {
 route.post("/", isAuthorized, async (req, res, next) => {
   try {
     console.log(req.query);
+    // console.log(req.options, "============");
     const { userId } = req.user || {};
 
     if (!userId) {
       throw new Forbidden("Unauthorized userId");
     }
+    const owner = userId;
+    if (!mongoose.Types.ObjectId.isValid(owner)) {
+      throw new BadRequest("Invalid object id");
+    }
 
-    const { title } = req.body;
-    const newProduct = new Product({ title, owner: userId });
+    const { title, price } = req.body;
+    const newProduct = new Product({
+      title,
+      owner,
+      price,
+    });
     // if ("owner" in req.query) {
     if (
       Object.keys(req.query).find((key) => key.toLocaleLowerCase() === "owner")
@@ -58,15 +68,6 @@ route.post("/", isAuthorized, async (req, res, next) => {
       newProduct.populate("owner").execPopulate();
     }
     await newProduct.save();
-    // await Product.populate(newProduct, { path: "owner" });
-    // const newProduct = await Product.create(
-    //   {
-    //     title,
-    //     owner: userId,
-    //   }
-    //   // { populate: { path: "owner" } }
-    // ).populate("owner");
-    // console.log(newProduct.populate("owner"));
 
     res.status(201).json({
       message: "successful",
@@ -77,4 +78,4 @@ route.post("/", isAuthorized, async (req, res, next) => {
   }
 });
 
-exports.productRoute = route;
+export const productRoute = route;

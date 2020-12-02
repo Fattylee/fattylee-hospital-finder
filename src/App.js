@@ -2,6 +2,7 @@ import React, { Fragment, useRef, useState, useEffect } from "react";
 import { AppRoute } from "./AppRoute";
 import { Counter } from "./components/Counter";
 import { LoginForm } from "./components/LoginForm";
+import { TestForm } from "./components/TestForm";
 import "./redux";
 // import MapContainer from "./components/MapContainer";
 
@@ -60,6 +61,7 @@ const App = () => {
   };
   return (
     <Fragment>
+      <TestForm />
       <AppRoute>
         <LoginForm {...defaultLoginFormProps} />
         <Counter />

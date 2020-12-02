@@ -21,11 +21,4 @@ class Conflict extends GeneralError {}
 class Unauthorize extends GeneralError {}
 class Forbidden extends GeneralError {}
 
-module.exports = {
-  GeneralError,
-  BadRequest,
-  NotFound,
-  Conflict,
-  Unauthorize,
-  Forbidden,
-};
+export { GeneralError, BadRequest, NotFound, Conflict, Unauthorize, Forbidden };

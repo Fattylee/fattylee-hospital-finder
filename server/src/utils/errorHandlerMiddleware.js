@@ -1,6 +1,6 @@
-const { GeneralError, BadRequest, Conflict } = require("./error");
+import { GeneralError, BadRequest, Conflict } from "./error.js";
 
-exports.mongooseErrorHandler = (err, req, res, next) => {
+export const mongooseErrorHandler = (err, req, res, next) => {
   if (err.message.includes("validation")) next(new BadRequest(err.message));
   else if (err.code === 11000) {
     const field = err.keyValue.username ? "Username" : "Email";
@@ -13,7 +13,7 @@ exports.mongooseErrorHandler = (err, req, res, next) => {
   next(err);
 };
 
-exports.errorHandler = (error, req, res, next) => {
+export const errorHandler = (error, req, res, next) => {
   const baseErrorResponse = {
     statusText: "",
     message: error.message,

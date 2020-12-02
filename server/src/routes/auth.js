@@ -1,6 +1,6 @@
-const express = require("express");
-const { User } = require("../models/user");
-const { NotFound, BadRequest } = require("../utils/error");
+import express from "express";
+import { User } from "../models/user.js";
+import { NotFound, BadRequest } from "../utils/error.js";
 
 const route = express.Router();
 
@@ -39,4 +39,4 @@ route.post("/login", async (req, res, next) => {
   }
 });
 
-exports.auth = route;
+export { route as auth };
