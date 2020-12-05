@@ -1,9 +1,14 @@
 import React, { Fragment, useRef, useState, useEffect } from "react";
 import { AppRoute } from "./AppRoute";
+import { Products } from "./components";
 import { Counter } from "./components/Counter";
 import { LoginForm } from "./components/LoginForm";
+import { MaterialUI } from "./components/MaterialUI";
+// import Products from "./components/products/Products";
 import { TestForm } from "./components/TestForm";
-import "./redux";
+import { Provider } from "react-redux";
+import { store } from "./store";
+// import "./redux";
 // import MapContainer from "./components/MapContainer";
 
 const fectPlace = (place, setApiResult, apiUrl) => {
@@ -32,9 +37,9 @@ const App = () => {
     hospitalName
   )}&inputtype=textquery&fields=photos,formatted_address,name,opening_hours,rating&key=${apiKey}`;
 
-  useEffect(() => {
-    fectPlace(hospitalName, setApiResult, test);
-  }, []);
+  // useEffect(() => {
+  //   fectPlace(hospitalName, setApiResult, test);
+  // }, []);
 
   const handleHospitalSearch = (e) => {
     e.preventDefault();
@@ -61,6 +66,10 @@ const App = () => {
   };
   return (
     <Fragment>
+      <Provider store={store}>
+        <Products />
+      </Provider>
+      <MaterialUI high />
       <TestForm />
       <AppRoute>
         <LoginForm {...defaultLoginFormProps} />
