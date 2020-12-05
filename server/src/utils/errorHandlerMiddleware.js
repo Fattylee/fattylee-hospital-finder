@@ -54,3 +54,10 @@ export const errorHandler = (error, req, res, next) => {
   }
   res.status(500).json(restErrorResponse);
 };
+
+export const requestLogger = (req, res, next) => {
+  const { method, path } = req;
+  const timestamp = new Date().toISOString();
+  console.log(`${method} ${path} - ${timestamp}`);
+  next();
+};
