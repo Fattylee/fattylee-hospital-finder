@@ -1,4 +1,4 @@
-import { Grid } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 import React, { useEffect } from "react";
 import Product from "./product/Product";
 
@@ -53,13 +53,18 @@ const Products = () => {
   return (
     <div>
       {products.length ? (
-        <Grid container spacing={3}>
-          {products.map((product) => (
-            <Grid item xs={12} sm={6} lg={4} xl={3}>
-              <Product key={product._id} product={product} />
-            </Grid>
-          ))}
-        </Grid>
+        <>
+          <Typography align="center" variant="h3">
+            Products for sales
+          </Typography>
+          <Grid container spacing={3}>
+            {products.map((product) => (
+              <Grid key={product._id} item xs={12} sm={6} lg={4} xl={3}>
+                <Product key={product._id} product={product} />
+              </Grid>
+            ))}
+          </Grid>
+        </>
       ) : (
         <LocalDining />
       )}

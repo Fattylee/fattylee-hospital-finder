@@ -27,7 +27,7 @@ const Product = ({ product }) => {
           </IconButton>
         }
       />
-      <CardMedia className={classes.img} image={product.img} />
+      <CardMedia className={classes.img} image={product.img || "kjsjwjs"} />
       <CardContent align="justify">
         <Typography variant="body1">{product.title}</Typography>
         <Typography>{product.price}</Typography>

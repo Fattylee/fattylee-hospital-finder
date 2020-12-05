@@ -5,33 +5,45 @@ import {
   Container,
   IconButton,
   Toolbar,
-  Typography,
 } from "@material-ui/core";
 import { MenuBook } from "@material-ui/icons";
+import { useStyles } from "./styles";
+import { Link } from "react-router-dom";
 
-export const Header = () => {
+const Header = () => {
+  const classes = useStyles();
   return (
     <>
       <AppBar position="sticky" color="transparent">
         <Container>
-          <Toolbar>
-            <IconButton
-              aria-label="Menubook icon"
-              edge=""
-              style={{ flexGrow: 0 }}
-            >
-              <MenuBook />
+          <Toolbar className={classes.root}>
+            <IconButton aria-label="Menubook icon">
+              <Link to="/">
+                <MenuBook color="action" />
+              </Link>
             </IconButton>
-            <Typography variant="h6" style={{ flexGrow: 4, background: "red" }}>
-              News
-            </Typography>
-            <Button variant="text" color="inherit">
-              Logout
-            </Button>
+            <div>
+              <Button variant="text" color="inherit">
+                <Link to="/login" className={classes.link}>
+                  Login
+                </Link>
+              </Button>
+              <Button variant="text" color="inherit">
+                <Link to="/register" className={classes.link}>
+                  Register
+                </Link>
+              </Button>
+              <Button variant="text" color="inherit">
+                <Link to="/logout" className={classes.link}>
+                  Logout
+                </Link>
+              </Button>
+            </div>
           </Toolbar>
         </Container>
       </AppBar>
-      ;
     </>
   );
 };
+
+export default Header;
