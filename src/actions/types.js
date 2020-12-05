@@ -1,2 +1,2 @@
-export const FETCH_POSTS = "FETCH_POSTS";
-export const CREATE_POST = "CREATE_POST";
+export const FETCH_PRODUCTS = "FETCH_PRODUCTS";
+export const CREATE_PRODUCT = "CREATE_PRODUCT";

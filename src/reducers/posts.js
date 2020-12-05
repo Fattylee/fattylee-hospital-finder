@@ -1,11 +1,11 @@
-import { FETCH_POSTS } from "../actions/types";
+import { FETCH_PRODUCTS } from "../actions/types";
 
-export const posts = (posts = [], action) => {
+export const products = (products = [], action) => {
   switch (action.type) {
-    case FETCH_POSTS:
+    case FETCH_PRODUCTS:
       return action.payload;
 
     default:
-      return posts;
+      return products;
   }
 };
