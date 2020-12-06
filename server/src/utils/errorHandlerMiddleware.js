@@ -29,6 +29,9 @@ export const errorHandler = (error, req, res, next) => {
       ...baseErrorResponse,
       statusCode: error.getCode()[0],
       statusText: error.getCode()[1],
+      error: {
+        error: error.message,
+      },
     };
 
     // log the error to the server
