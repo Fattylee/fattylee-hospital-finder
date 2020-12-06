@@ -1,2 +1,3 @@
 export const FETCH_PRODUCTS = "FETCH_PRODUCTS";
 export const CREATE_PRODUCT = "CREATE_PRODUCT";
+export const GET_ERRORS = "GET_ERRORS";

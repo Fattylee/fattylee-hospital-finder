@@ -1,3 +1,4 @@
+import Joi from "joi";
 import { GeneralError, BadRequest, Conflict } from "./error.js";
 
 export const mongooseErrorHandler = (err, req, res, next) => {
@@ -38,6 +39,21 @@ export const errorHandler = (error, req, res, next) => {
     }
 
     return res.status(error.getCode()[0]).json(generalErrorResponse);
+  }
+
+  // if (error instanceof Joi.ValidationError) {
+  if (Joi.isError(error)) {
+    const errorObj = error.details.reduce((prevValue, curValue) => {
+      prevValue[curValue.path[0]] = curValue.message;
+      return prevValue;
+    }, {});
+
+    return res.status(400).json({
+      ...baseErrorResponse,
+      error: errorObj,
+      statusCode: 400,
+      statusText: "BadRequest",
+    });
   }
 
   const restErrorResponse = {
