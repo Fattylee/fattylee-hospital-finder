@@ -13,7 +13,13 @@ router.get(
 
 router.get("/:id", ProductController.getAProduct);
 
-router.post("/", isAuthorized, ProductController.createProduct);
+router.post(
+  "/",
+  isAuthorized,
+  ErrorMiddleware.createProductValidator,
+  ProductController.createProduct
+);
+
 router.delete("/:id", isAuthorized, ProductController.deleteProduct);
 
 export const productRoute = router;

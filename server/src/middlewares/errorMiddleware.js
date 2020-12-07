@@ -54,6 +54,23 @@ export class ErrorMiddleware {
     req.query = { ...req.query, ...value };
     next();
   }
+  static createProductValidator(req, res, next) {
+    ErrorMiddleware.lowerCaseReqProp(req, "query");
+    ErrorMiddleware.lowerCaseReqProp(req, "body");
+
+    const schema = Joi.object({
+      title: Joi.string().min(2).required(),
+      price: Joi.number().greater(0).positive().default(0),
+    });
+
+    const { value, error } = ErrorMiddleware.validate(schema, req.body);
+    if (error) throw new BadRequest(error);
+
+    req.query.owner = value.owner;
+    req.body.price = value.price;
+    req.body.title = value.title;
+    next();
+  }
 
   static validate(schema, value) {
     return schema.validate(value, {
@@ -68,7 +85,7 @@ export class ErrorMiddleware {
   }
 
   static lowerCaseReqProp(req, property = "query") {
-    let { query: queryObj } = req;
+    const queryObj = req[property];
     req[property] = Object.entries(queryObj).reduce((prev, cur) => {
       prev[cur[0].toLocaleLowerCase()] = cur[1];
       return prev;

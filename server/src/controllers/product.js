@@ -33,43 +33,33 @@ export class ProductController {
       next(ex);
     }
   }
-  static async createProduct(req, res, next) {
-    try {
-      console.log(req.query);
-      // console.log(req.options, "============");
-      const { userId } = req.user || {};
+  static async createProduct(req, res) {
+    console.log(req.query);
+    const { userId } = req.user || {};
 
-      if (!userId) {
-        throw new Forbidden("Unauthorized userId");
-      }
-      const owner = userId;
-      if (!mongoose.Types.ObjectId.isValid(owner)) {
-        throw new BadRequest("Invalid object id");
-      }
-
-      const { title, price } = req.body;
-      const newProduct = new Product({
-        title,
-        owner,
-        price,
-      });
-      // if ("owner" in req.query) {
-      if (
-        Object.keys(req.query).find(
-          (key) => key.toLocaleLowerCase() === "owner"
-        )
-      ) {
-        newProduct.populate("owner").execPopulate();
-      }
-      await newProduct.save();
-
-      res.status(201).json({
-        message: "successful",
-        product: newProduct,
-      });
-    } catch (error) {
-      next(error);
+    if (!userId) {
+      throw new Forbidden("Unauthorized token, please re-login");
     }
+    const owner = userId;
+    if (!mongoose.Types.ObjectId.isValid(owner)) {
+      throw new BadRequest("Invalid object id");
+    }
+
+    const { title, price } = req.body;
+    const newProduct = new Product({
+      title,
+      owner,
+      price,
+    });
+    if ("owner" in req.query) {
+      newProduct.populate("owner").execPopulate();
+    }
+    await newProduct.save();
+
+    res.status(201).json({
+      message: "successful",
+      product: newProduct,
+    });
   }
 
   static async deleteProduct(req, res, next) {
