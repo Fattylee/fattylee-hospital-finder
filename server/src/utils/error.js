@@ -2,8 +2,6 @@ import Joi from "joi";
 
 class GeneralError extends Error {
   constructor(error) {
-    console.log(error);
-    console.log("================");
     super(error);
     if (Joi.isError(error)) {
       this.message = error.message;

@@ -1,48 +1,15 @@
 import express from "express";
-import { User } from "../models/user.js";
-import { NotFound, BadRequest } from "../utils/error.js";
 import { ErrorMiddleware } from "../middlewares/errorMiddleware.js";
+import { AuthController } from "../controllers/auth.js";
 
-const route = express.Router();
-const monkeyPatch = (reqResHandler) => {
-  return async (req, res, next) => {
-    try {
-      await reqResHandler(req, res);
-    } catch (ex) {
-      next(ex);
-    }
-  };
-};
+const router = express.Router();
 
-route.post("/register", ErrorMiddleware.registerValidator, async (req, res) => {
-  const newUser = await User.create(req.body);
+router.post(
+  "/register",
+  ErrorMiddleware.registerValidator,
+  AuthController.register
+);
 
-  return res.status(201).send({
-    message: "successful",
-    user: newUser.userResponse(),
-    token: newUser.genAuthToken(),
-  });
-});
+router.post("/login", ErrorMiddleware.loginValidator, AuthController.login);
 
-route.post("/login", async (req, res, next) => {
-  try {
-    const { username, email, password } = req.body;
-
-    const user = await User.findOne({ $or: [{ username }, { email }] });
-
-    if (!user) throw new NotFound("User not found");
-
-    if (!(await user.verifyPassword(password)))
-      throw new BadRequest("Invalid password");
-
-    return res.status(201).send({
-      message: "successful",
-      user: user.userResponse(),
-      token: user.genAuthToken(),
-    });
-  } catch (ex) {
-    next(ex);
-  }
-});
-
-export { route as auth };
+export { router as auth };
