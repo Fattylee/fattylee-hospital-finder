@@ -1,14 +1,15 @@
-import Joi from "joi";
 import { GeneralError, BadRequest, Conflict } from "./error.js";
 
 export const mongooseErrorHandler = (err, req, res, next) => {
-  if (err.message.includes("validation")) next(new BadRequest(err.message));
+  if (err?.message?.includes("validation")) next(new BadRequest(err));
   else if (err.code === 11000) {
-    const field = err.keyValue.username ? "Username" : "Email";
+    const field = err.keyValue.username ? "username" : "email";
     next(
-      new Conflict(
-        `${field}: '${err.keyValue[field.toLocaleLowerCase()]}' already taken`
-      )
+      new Conflict({
+        [field]: `${field}: '${
+          err.keyValue[field.toLocaleLowerCase()]
+        }' already taken`,
+      })
     );
   }
   next(err);
@@ -16,12 +17,13 @@ export const mongooseErrorHandler = (err, req, res, next) => {
 
 export const errorHandler = (error, req, res, next) => {
   const baseErrorResponse = {
-    statusText: "",
-    message: error.message,
+    statusText: "Internal Server Error",
+    message: "something went wrong",
     method: req.method,
     path: req.path,
-    statusCode: 0,
+    statusCode: 500,
     timestamp: new Date().toLocaleString(),
+    error: error.data,
   };
 
   if (error instanceof GeneralError) {
@@ -29,9 +31,7 @@ export const errorHandler = (error, req, res, next) => {
       ...baseErrorResponse,
       statusCode: error.getCode()[0],
       statusText: error.getCode()[1],
-      error: {
-        error: error.message,
-      },
+      message: error.message,
     };
 
     // log the error to the server
@@ -44,34 +44,17 @@ export const errorHandler = (error, req, res, next) => {
     return res.status(error.getCode()[0]).json(generalErrorResponse);
   }
 
-  // if (error instanceof Joi.ValidationError) {
-  if (Joi.isError(error)) {
-    const errorObj = error.details.reduce((prevValue, curValue) => {
-      prevValue[curValue.path[0]] = curValue.message;
-      return prevValue;
-    }, {});
-
-    return res.status(400).json({
-      ...baseErrorResponse,
-      error: errorObj,
-      statusCode: 400,
-      statusText: "BadRequest",
-    });
-  }
-
-  const restErrorResponse = {
-    ...baseErrorResponse,
-    statusCode: 500,
-    statusText: "Internal Server Error",
-  };
-
   // log the error to the server
-  console.log({ ...restErrorResponse, stack: error.stack });
+  console.log({
+    ...baseErrorResponse,
+    stack: error.stack,
+    error: { error: error.message },
+  });
 
   if (process.env.NODE_ENV !== "production") {
-    restErrorResponse.stack = error.stack;
+    baseErrorResponse.stack = error.stack;
   }
-  res.status(500).json(restErrorResponse);
+  res.status(500).json(baseErrorResponse);
 };
 
 export const requestLogger = (req, res, next) => {

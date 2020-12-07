@@ -1,23 +1,27 @@
 import express from "express";
 import { User } from "../models/user.js";
 import { NotFound, BadRequest } from "../utils/error.js";
-import Joi from "joi";
 import { ErrorMiddleware } from "../middlewares/errorMiddleware.js";
 
 const route = express.Router();
+const monkeyPatch = (reqResHandler) => {
+  return async (req, res, next) => {
+    try {
+      await reqResHandler(req, res);
+    } catch (ex) {
+      next(ex);
+    }
+  };
+};
 
-route.post("/register", ErrorMiddleware.register, async (req, res, next) => {
-  try {
-    const newUser = await User.create(req.body);
+route.post("/register", ErrorMiddleware.registerValidator, async (req, res) => {
+  const newUser = await User.create(req.body);
 
-    return res.status(201).send({
-      message: "successful",
-      user: newUser.userResponse(),
-      token: newUser.genAuthToken(),
-    });
-  } catch (ex) {
-    next(ex);
-  }
+  return res.status(201).send({
+    message: "successful",
+    user: newUser.userResponse(),
+    token: newUser.genAuthToken(),
+  });
 });
 
 route.post("/login", async (req, res, next) => {

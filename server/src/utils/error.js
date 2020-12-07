@@ -1,7 +1,29 @@
+import Joi from "joi";
+
 class GeneralError extends Error {
-  constructor(message) {
-    super(message);
-    this.message = message;
+  constructor(error) {
+    console.log(error);
+    console.log("================");
+    super(error);
+    if (Joi.isError(error)) {
+      this.message = error.message;
+      this.data = error.details.reduce(
+        (prev, cur) => ({
+          ...prev,
+          [cur.path[0]]: cur.message,
+        }),
+        {}
+      );
+    } else if (typeof error === "object") {
+      this.message =
+        error instanceof Error
+          ? error.message
+          : Object.values(error).join(", ") + ".";
+      this.data = error instanceof Error ? { error: error.message } : error;
+    } else {
+      this.message = error;
+      this.data = { error };
+    }
   }
 
   getCode() {
