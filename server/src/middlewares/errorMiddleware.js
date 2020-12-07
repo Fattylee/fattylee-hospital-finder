@@ -41,6 +41,20 @@ export class ErrorMiddleware {
     next();
   }
 
+  static getProductsValidator(req, res, next) {
+    ErrorMiddleware.lowerCaseReqProp(req, "query");
+
+    const schema = Joi.object({
+      page: Joi.number().greater(0).default(1),
+      size: Joi.number().greater(0).positive().default(Math.pow(10, 10)),
+    });
+
+    const { value, error } = ErrorMiddleware.validate(schema, req.query);
+    if (error) throw new BadRequest(error);
+    req.query = { ...req.query, ...value };
+    next();
+  }
+
   static validate(schema, value) {
     return schema.validate(value, {
       abortEarly: false,
@@ -51,5 +65,13 @@ export class ErrorMiddleware {
         },
       },
     });
+  }
+
+  static lowerCaseReqProp(req, property = "query") {
+    let { query: queryObj } = req;
+    req[property] = Object.entries(queryObj).reduce((prev, cur) => {
+      prev[cur[0].toLocaleLowerCase()] = cur[1];
+      return prev;
+    }, {});
   }
 }

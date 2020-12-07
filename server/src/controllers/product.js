@@ -2,32 +2,15 @@ import Axios from "axios";
 import mongoose from "mongoose";
 import { Product } from "../models/product.js";
 import { BadRequest, Forbidden, NotFound } from "../utils/error.js";
-const refineQuery = (req) => {
-  let { query: queryObj } = req;
-  req.query = Object.entries(queryObj).reduce((prev, cur) => {
-    prev[cur[0].toLocaleLowerCase()] = cur[1];
-    return prev;
-  }, {});
-  Axios.defaults.headers.common["Authorization"] = "kskk";
-  // gravatar.url("email_here", {
-  //   s: "200",
-  //   r: "pg",
-  //   d: "mm",
-  // });
-  return (
-    Object.keys(queryObj).length &&
-    Object.keys(queryObj).find((owner) => owner.toLocaleLowerCase() === "owner")
-  );
-};
 
 export class ProductController {
   static async getProducts(req, res) {
-    refineQuery(req);
-    console.log(req.query);
+    const { page, size } = req.query;
 
     const products = await Product.find()
       .sort({ price: -1 })
-      .limit(4)
+      .limit(size)
+      .skip((page - 1) * size)
       .populate({
         path: ("owner" in req.query && "owner") || "",
         select: "-password",
