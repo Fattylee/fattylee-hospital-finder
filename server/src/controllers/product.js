@@ -34,7 +34,6 @@ export class ProductController {
     }
   }
   static async createProduct(req, res) {
-    console.log(req.query);
     const { userId } = req.user || {};
 
     if (!userId) {

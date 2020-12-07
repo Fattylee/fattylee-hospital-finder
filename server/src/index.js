@@ -3,7 +3,7 @@ import { config } from "dotenv";
 import express from "express";
 import "express-async-errors";
 import mongoose from "mongoose";
-import { auth } from "./routes/auth.js";
+import { authRoute } from "./routes/auth.js";
 import { productRoute } from "./routes/product.js";
 import {
   errorHandler,
@@ -27,7 +27,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(cors());
 app.use(requestLogger);
-app.use("/api/v1/auth", auth);
+app.use("/api/v1/auth", authRoute);
 
 app.use("/api/v1/products", productRoute);
 

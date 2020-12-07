@@ -1,13 +1,13 @@
 import { Router } from "express";
 import { isAuthorized } from "../middlewares/isAuthorized.js";
 import { ProductController } from "../controllers/product.js";
-import { ErrorMiddleware } from "../middlewares/errorMiddleware.js";
+import { ProductValidator } from "../validations/product.js";
 
 const router = Router();
 
 router.get(
   "/",
-  ErrorMiddleware.getProductsValidator,
+  ProductValidator.getProductsValidator,
   ProductController.getProducts
 );
 
@@ -16,7 +16,7 @@ router.get("/:id", ProductController.getAProduct);
 router.post(
   "/",
   isAuthorized,
-  ErrorMiddleware.createProductValidator,
+  ProductValidator.createProductValidator,
   ProductController.createProduct
 );
 
