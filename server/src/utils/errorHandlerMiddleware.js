@@ -52,6 +52,7 @@ export const errorHandler = (error, req, res, next) => {
   });
 
   if (process.env.NODE_ENV !== "production") {
+    baseErrorResponse.error = { error: error.message };
     baseErrorResponse.stack = error.stack;
   }
   res.status(500).json(baseErrorResponse);

@@ -1,26 +1,42 @@
+import Axios from "axios";
 import mongoose from "mongoose";
 import { Product } from "../models/product.js";
 import { BadRequest, Forbidden, NotFound } from "../utils/error.js";
+const refineQuery = (req) => {
+  let { query: queryObj } = req;
+  req.query = Object.entries(queryObj).reduce((prev, cur) => {
+    prev[cur[0].toLocaleLowerCase()] = cur[1];
+    return prev;
+  }, {});
+  Axios.defaults.headers.common["Authorization"] = "kskk";
+  // gravatar.url("email_here", {
+  //   s: "200",
+  //   r: "pg",
+  //   d: "mm",
+  // });
+  return (
+    Object.keys(queryObj).length &&
+    Object.keys(queryObj).find((owner) => owner.toLocaleLowerCase() === "owner")
+  );
+};
 
 export class ProductController {
-  static async getProducts(req, res, next) {
-    try {
-      const products = await Product.find().populate(
-        "owner",
-        " -password",
-        "User",
-        /fatty/
-      );
-      // .populate({ path: "owner", select: "username email", match: /fatty/ })
-      // .limit(2);
+  static async getProducts(req, res) {
+    refineQuery(req);
+    console.log(req.query);
 
-      res.status(200).json({
-        message: "successful",
-        products,
+    const products = await Product.find()
+      .sort({ price: -1 })
+      .limit(4)
+      .populate({
+        path: ("owner" in req.query && "owner") || "",
+        select: "-password",
       });
-    } catch (ex) {
-      next(ex);
-    }
+
+    res.status(200).json({
+      message: "successful",
+      products,
+    });
   }
 
   static async getAProduct(req, res, next) {
@@ -72,6 +88,7 @@ export class ProductController {
       next(error);
     }
   }
+
   static async deleteProduct(req, res, next) {
     try {
       const deletedProduct = await Product.findById(req.params.id);
