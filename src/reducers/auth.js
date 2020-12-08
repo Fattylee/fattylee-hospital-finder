@@ -1,6 +1,6 @@
 const initialState = {
   isAuthenticated: false,
-  user: null,
+  user: {},
 };
 
 export const auth = (auth = initialState, action) => {

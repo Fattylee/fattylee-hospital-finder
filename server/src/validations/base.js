@@ -1,5 +1,3 @@
-import Joi from "joi";
-
 export class BaseValidator {
   static validate(schema, value) {
     return schema.validate(value, {

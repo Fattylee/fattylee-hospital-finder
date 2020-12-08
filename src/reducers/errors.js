@@ -1,8 +1,8 @@
-import { GET_ERRORS } from "../actions/types";
+import { SET_ERRORS } from "../actions/types";
 
 export const errors = (errors = {}, action) => {
   switch (action.type) {
-    case GET_ERRORS:
+    case SET_ERRORS:
       return action.payload;
     default:
       return errors;
