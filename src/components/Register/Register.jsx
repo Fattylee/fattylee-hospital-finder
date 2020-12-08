@@ -25,13 +25,6 @@ const Register = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // clear component state
-    // setUserData({
-    //   username: "",
-    //   email: "",
-    //   password: "",
-    // });
-
     dispatch(registerUser(userData, props.history));
   };
 
@@ -45,7 +38,7 @@ const Register = (props) => {
         <Typography variant="h4" component="h2" gutterBottom align="center">
           Register for a Account
         </Typography>
-        <form onSubmit={handleSubmit} noValidate>
+        <form onSubmit={handleSubmit} autoComplete="false" noValidate>
           <div style={{ marginBottom: "20px" }}>
             <TextField
               label="username"

@@ -3,7 +3,17 @@ import { Header, Landing, Login, Products, Register } from "./components";
 import { Provider } from "react-redux";
 import { store } from "./store";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { setOrClearAuthToken } from "./utils/api";
+import { setCurrentUser } from "./actions/auth";
+import { decode } from "jsonwebtoken";
 
+if (localStorage.jwtToken) {
+  const token = localStorage.jwtToken;
+
+  setOrClearAuthToken(token);
+  const decoded = decode(token);
+  store.dispatch(setCurrentUser(decoded));
+}
 const App = () => {
   return (
     <Fragment>
