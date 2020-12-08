@@ -1,5 +1,5 @@
 import { Button, Card, TextField, Typography } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../../actions/auth";
 // import { useStyles } from "./styles";
@@ -11,6 +11,10 @@ const initialState = {
 };
 
 const Register = (props) => {
+  const { isAuthenticated } = useSelector((state) => state.auth);
+  useEffect(() => {
+    if (isAuthenticated) props.history.push("/dashboard");
+  }, []);
   const [userData, setUserData] = useState(initialState);
   const dispatch = useDispatch();
   const errors = useSelector((state) => state.errors);
