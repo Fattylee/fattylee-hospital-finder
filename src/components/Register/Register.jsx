@@ -11,10 +11,10 @@ const initialState = {
 };
 
 const Register = (props) => {
-  const { isAuthenticated } = useSelector((state) => state.auth);
-  useEffect(() => {
-    if (isAuthenticated) props.history.push("/dashboard");
-  }, []);
+  // const { isAuthenticated } = useSelector((state) => state.auth);
+  // useEffect(() => {
+  //   if (isAuthenticated) props.history.push("/dashboard");
+  // }, [isAuthenticated, props.history]);
   const [userData, setUserData] = useState(initialState);
   const dispatch = useDispatch();
   const errors = useSelector((state) => state.errors);

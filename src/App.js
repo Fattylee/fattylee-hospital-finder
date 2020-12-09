@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { setOrClearAuthToken } from "./utils/api";
 import { setCurrentUser } from "./actions/auth";
 import { decode } from "jsonwebtoken";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 if (localStorage.jwtToken) {
   const token = localStorage.jwtToken;
@@ -14,6 +15,10 @@ if (localStorage.jwtToken) {
   const decoded = decode(token);
   store.dispatch(setCurrentUser(decoded));
 }
+
+const Dashboard = () => <div>Dashboad protected component</div>;
+const NotFound = () => <div>Not Found Page</div>;
+
 const App = () => {
   return (
     <Fragment>
@@ -25,6 +30,8 @@ const App = () => {
             <Route exact path="/products" component={Products} />
             <Route path="/register" component={Register} />
             <Route path="/login" component={Login} />
+            <ProtectedRoute exact path="/dashboard" component={Dashboard} />
+            <Route path="*" component={NotFound} />
           </Switch>
         </Router>
       </Provider>

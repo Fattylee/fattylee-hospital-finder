@@ -6,6 +6,7 @@ const Landing = () => {
     <>
       Landing Page
       <Link to="/products">Products</Link>
+      <Link to="/dashboard">Dashboard</Link>
     </>
   );
 };
