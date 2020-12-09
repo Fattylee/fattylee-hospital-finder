@@ -17,6 +17,7 @@ if (localStorage.jwtToken) {
 }
 
 const Dashboard = () => <div>Dashboad protected component</div>;
+const Profile = () => <div>Dashboad protected component</div>;
 const NotFound = () => <div>Not Found Page</div>;
 
 const App = () => {
@@ -31,6 +32,7 @@ const App = () => {
             <Route path="/register" component={Register} />
             <Route path="/login" component={Login} />
             <ProtectedRoute exact path="/dashboard" component={Dashboard} />
+            <ProtectedRoute exact path="/profile" component={Profile} />
             <Route path="*" component={NotFound} />
           </Switch>
         </Router>

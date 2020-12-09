@@ -1,6 +1,7 @@
 import React from "react";
 import {
   AppBar,
+  Avatar,
   Button,
   Container,
   IconButton,
@@ -9,27 +10,38 @@ import {
 import { MenuBook } from "@material-ui/icons";
 import { useStyles } from "./styles";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setOrClearAuthToken } from "../../utils/api";
+import { setCurrentUser } from "../../actions/auth";
 
 const Header = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const {
     isAuthenticated,
     user: { username },
   } = useSelector((state) => state.auth);
 
+  const handleLogout = (e) => {
+    localStorage.removeItem("jwtToken");
+    setOrClearAuthToken();
+    dispatch(setCurrentUser({}));
+  };
   const authLinks = isAuthenticated && (
     <div>
       <Button variant="text" color="inherit">
-        <Link to="/dashboard" className={classes.link}>
-          dashboard
+        <Link to="/profile" className={classes.link}>
+          <Avatar children={username[0]} title="profile" variant="circular" />
         </Link>
       </Button>
 
-      <Button variant="text" color="inherit">
-        <Link to="/logout" className={classes.link}>
-          Logout
-        </Link>
+      <Button
+        variant="text"
+        color="inherit"
+        className={classes.link}
+        onClick={handleLogout}
+      >
+        Logout
       </Button>
     </div>
   );

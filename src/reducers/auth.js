@@ -11,7 +11,7 @@ export const auth = (auth = initialState, action) => {
     case SET_CURRENT_USER:
       return {
         ...auth,
-        isAuthenticated: isEmpty(action.payload),
+        isAuthenticated: !isEmpty(action.payload),
         user: action.payload,
       };
     default:
