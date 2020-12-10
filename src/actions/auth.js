@@ -34,3 +34,20 @@ export const registerUser = (userData, history) => async (dispatch) => {
     dispatch(setErrors(ex.response.data.error));
   }
 };
+
+export const loginUser = (userData, history) => async (dispatch) => {
+  try {
+    const { data } = await axios.post("login", userData);
+    console.log(data);
+    const { token } = data;
+    localStorage.setItem("jwtToken", token);
+
+    setOrClearAuthToken(token);
+    dispatch(setErrors({}));
+    dispatch(setCurrentUser(decode(token)));
+    history.push("/dashboard");
+  } catch (error) {
+    // console.dir(error);
+    dispatch(setErrors(error.response.data.error));
+  }
+};

@@ -1,8 +1,7 @@
 import { Button, Card, TextField, Typography } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../../actions/auth";
-// import { useStyles } from "./styles";
 
 const initialState = {
   username: "",
@@ -11,14 +10,14 @@ const initialState = {
 };
 
 const Register = (props) => {
-  // const { isAuthenticated } = useSelector((state) => state.auth);
-  // useEffect(() => {
-  //   if (isAuthenticated) props.history.push("/dashboard");
-  // }, [isAuthenticated, props.history]);
   const [userData, setUserData] = useState(initialState);
   const dispatch = useDispatch();
-  const errors = useSelector((state) => state.errors);
+  const {
+    errors,
+    auth: { isAuthenticated },
+  } = useSelector((state) => state);
 
+  if (isAuthenticated) props.history.push("/dashboard");
   const handleChange = (e) => {
     setUserData((prevState) => ({
       ...prevState,
@@ -32,7 +31,6 @@ const Register = (props) => {
     dispatch(registerUser(userData, props.history));
   };
 
-  // const classes = useStyles();
   return (
     <>
       <Card
@@ -106,7 +104,6 @@ const Register = (props) => {
           />
         </form>
       </Card>
-      {/* {JSON.stringify(errors)} */}
     </>
   );
 };

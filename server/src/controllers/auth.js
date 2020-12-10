@@ -13,9 +13,11 @@ export class AuthController {
   }
 
   static async login(req, res) {
-    const { username, email, password } = req.body;
+    const { identity, password } = req.body;
 
-    const user = await User.findOne({ $or: [{ username }, { email }] });
+    const user = await User.findOne({
+      $or: [{ username: identity }, { email: identity }],
+    });
 
     if (!user) throw new NotFound({ identity: "user not found" });
 

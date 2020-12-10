@@ -11,7 +11,7 @@ export class ProductController {
       .limit(size)
       .skip((page - 1) * size)
       .populate({
-        path: ("owner" in req.query && "owner") || "",
+        path: "owner" in req.query ? "owner" : "",
         select: "-password",
       });
 
