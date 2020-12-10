@@ -45,7 +45,7 @@ const Header = () => {
       </Button>
     </div>
   );
-  const guestLinks = !isAuthenticated && (
+  const guestLinks = (
     <div>
       <Button variant="text" color="inherit">
         <Link to="/login" className={classes.link}>
@@ -65,12 +65,11 @@ const Header = () => {
         <Container>
           <Toolbar className={classes.root}>
             <IconButton aria-label="Menubook icon">
-              <Link to="/">
+              <Link to={isAuthenticated ? "/products" : "/"}>
                 <MenuBook color="action" />
               </Link>
             </IconButton>
-            {authLinks}
-            {guestLinks}
+            {isAuthenticated ? authLinks : guestLinks}
           </Toolbar>
         </Container>
       </AppBar>

@@ -1,7 +1,7 @@
 import { Button, Card, TextField, Typography } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser, registerUser } from "../../actions/auth";
+import { loginUser } from "../../actions/auth";
 
 const initialState = {
   identity: "",

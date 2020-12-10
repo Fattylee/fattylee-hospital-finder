@@ -11,13 +11,19 @@ import ProtectedRoute from "./components/ProtectedRoute";
 if (localStorage.jwtToken) {
   const token = localStorage.jwtToken;
 
-  setOrClearAuthToken(token);
   const decoded = decode(token);
+
+  // check fo expired token
+  if (Date.now() / 1000 > decoded.exp) {
+    localStorage.removeItem("jwtToken");
+    window.location.assign("/login");
+  }
+  setOrClearAuthToken(token);
   store.dispatch(setCurrentUser(decoded));
 }
 
 const Dashboard = () => <div>Dashboad protected component</div>;
-const Profile = () => <div>Dashboad protected component</div>;
+const Profile = () => <div>Profile protected component</div>;
 const NotFound = () => <div>Not Found Page</div>;
 
 const App = () => {

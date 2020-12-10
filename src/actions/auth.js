@@ -38,7 +38,6 @@ export const registerUser = (userData, history) => async (dispatch) => {
 export const loginUser = (userData, history) => async (dispatch) => {
   try {
     const { data } = await axios.post("login", userData);
-    console.log(data);
     const { token } = data;
     localStorage.setItem("jwtToken", token);
 
@@ -47,7 +46,6 @@ export const loginUser = (userData, history) => async (dispatch) => {
     dispatch(setCurrentUser(decode(token)));
     history.push("/dashboard");
   } catch (error) {
-    // console.dir(error);
     dispatch(setErrors(error.response.data.error));
   }
 };
