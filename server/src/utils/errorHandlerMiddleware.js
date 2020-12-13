@@ -1,3 +1,4 @@
+import Joi from "joi";
 import { GeneralError, BadRequest, Conflict } from "./error.js";
 
 export const mongooseErrorHandler = (err, req, res, next) => {
@@ -12,6 +13,9 @@ export const mongooseErrorHandler = (err, req, res, next) => {
       })
     );
   }
+  // handles Joi async errors
+  else if (Joi.isError(err)) throw new BadRequest(err);
+
   next(err);
 };
 

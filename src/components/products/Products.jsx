@@ -1,11 +1,11 @@
-import { Grid, Typography } from "@material-ui/core";
+import { Container, Grid, Typography } from "@material-ui/core";
 import React, { useEffect } from "react";
 import Product from "./product/Product";
 
-import { store } from "../../store";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProduct } from "../../actions/product";
 import { LocalDining } from "@material-ui/icons";
+import { AddProduct } from "./addProduct/AddProduct";
 
 /**
  * Redux cheatsheet
@@ -49,26 +49,30 @@ const Products = () => {
     dispatch(fetchProduct());
   }, [dispatch]);
 
-  console.log(store.getState());
   return (
-    <div>
+    <Container>
       {products.length ? (
         <>
-          <Typography align="center" variant="h3">
+          <Typography align="center" variant="h3" gutterBottom>
             Products for sales
           </Typography>
-          <Grid container spacing={3}>
-            {products.map((product) => (
-              <Grid key={product._id} item xs={12} sm={6} lg={4} xl={3}>
-                <Product key={product._id} product={product} />
-              </Grid>
-            ))}
+          <Grid container justify="space-between">
+            <Grid container item md={8} spacing={2}>
+              {products.map((product) => (
+                <Grid key={product._id} item xs={12} sm={6} lg={4} xl={3}>
+                  <Product key={product._id} product={product} />
+                </Grid>
+              ))}
+            </Grid>
+            <Grid item md={3}>
+              <AddProduct />
+            </Grid>
           </Grid>
         </>
       ) : (
         <LocalDining />
       )}
-    </div>
+    </Container>
   );
 };
 

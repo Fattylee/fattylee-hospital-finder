@@ -5,7 +5,7 @@ import { SET_CURRENT_USER } from "./types";
 
 const { default: Axios } = require("axios");
 
-const axios = Axios.create({ baseURL: "http://localhost:5000/api/v1/auth" });
+const axios = Axios.create({ baseURL: "/api/v1/auth" });
 
 export const setCurrentUser = (user) => ({
   type: SET_CURRENT_USER,

@@ -1,4 +1,4 @@
-import { join } from "path";
+import { join, resolve } from "path";
 import { config } from "dotenv";
 import express from "express";
 import "express-async-errors";

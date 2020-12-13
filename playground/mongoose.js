@@ -1,4 +1,5 @@
 /* eslint-disable */
+import Joi from "joi";
 import mongoose from "mongoose";
 const { Schema, model, connect } = mongoose;
 
@@ -98,3 +99,24 @@ const posts = await Post.findOne({ title: /so/ }).populate({
   const users = await User.find();
   // console.log(users);
 })();
+
+const { error, value } = Joi.object({
+  name: Joi.string()
+    .min(3)
+    // .custom((value, helpers) => {
+    // if (value !== "faker") throw Error("This is not faker");
+    // if (value !== "faker") return helpers.error("This is not faker");
+    // if (value !== "faker") return helpers.error("any.invalid");
+    // if (value !== "faker") return helpers.message("now way for u");
+    // return value;
+    // }, "myValidate")
+    .pattern(/^[a-z]$/i)
+    // .min(1)
+    .message("faild to get validate")
+    .pattern(/past/i)
+    .message("faild to get past")
+    .pattern(/lo/i)
+    .message("faild to get lost"),
+}).validate({ name: "hm" });
+console.log(error);
+console.log(value);

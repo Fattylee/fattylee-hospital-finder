@@ -10,6 +10,17 @@ export class BaseValidator {
       },
     });
   }
+  static validateAsync(schema, value) {
+    return schema.validateAsync(value, {
+      abortEarly: false,
+      stripUnknown: true,
+      errors: {
+        wrap: {
+          label: "",
+        },
+      },
+    });
+  }
 
   static lowerCaseReqProp(req, property = "query") {
     const queryObj = req[property];

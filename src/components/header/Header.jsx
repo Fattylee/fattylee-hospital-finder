@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setOrClearAuthToken } from "../../utils/api";
 import { setCurrentUser } from "../../actions/auth";
 
-const Header = () => {
+const Header = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const {
@@ -26,6 +26,7 @@ const Header = () => {
     localStorage.removeItem("jwtToken");
     setOrClearAuthToken();
     dispatch(setCurrentUser({}));
+    window.location.assign("/");
   };
   const authLinks = isAuthenticated && (
     <div>
@@ -61,7 +62,11 @@ const Header = () => {
   );
   return (
     <div>
-      <AppBar position="sticky" color="transparent">
+      <AppBar
+        position="sticky"
+        color="transparent"
+        style={{ marginBottom: "20px" }}
+      >
         <Container>
           <Toolbar className={classes.root}>
             <IconButton aria-label="Menubook icon">

@@ -1,5 +1,4 @@
 import Joi from "joi";
-import { BadRequest } from "../utils/error.js";
 import { BaseValidator } from "./base.js";
 
 export class AuthValidator extends BaseValidator {
@@ -16,8 +15,7 @@ export class AuthValidator extends BaseValidator {
       email: Joi.string().email().required(),
     });
 
-    const { value, error } = AuthValidator.validate(schema, req.body);
-    if (error) throw new BadRequest(error);
+    const value = AuthValidator.validateAsync(schema, req.body);
 
     req.body = { ...req.body, ...value };
     next();
@@ -36,8 +34,7 @@ export class AuthValidator extends BaseValidator {
       password: Joi.string().pattern(/[a-z]/i).min(5).max(30).required(),
     });
 
-    const { value, error } = AuthValidator.validate(schema, req.body);
-    if (error) throw new BadRequest(error);
+    const value = await AuthValidator.validateAsync(schema, req.body);
 
     req.body = { ...req.body, ...value };
     next();

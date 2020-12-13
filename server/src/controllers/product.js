@@ -23,7 +23,13 @@ export class ProductController {
 
   static async getAProduct(req, res, next) {
     try {
-      const product = await Product.findById(req.params.id);
+      const { id } = req.params;
+
+      if (!mongoose.Types.ObjectId.isValid(id))
+        throw new BadRequest({ id: `Invalid product id '${id}'` });
+      const product = await Product.findById(id);
+      if (!product) throw new NotFound("Product not found");
+
       res.status(200).json({
         message: "successful",
         product,
