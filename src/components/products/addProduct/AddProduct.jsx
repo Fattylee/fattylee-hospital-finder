@@ -9,17 +9,6 @@ const AddProduct = () => {
   const [{ title, price }, setProduct] = useState(initialState);
   const dispatch = useDispatch();
   const errors = useSelector((state) => state.errors);
-  const [count, setCount] = useState(0);
-  const handleCount = (e) => {
-    setCount(count + 1);
-    priceRef.current.querySelector("input").focus();
-  };
-  const priceRef = React.useRef(null);
-
-  React.useEffect(() => {
-    console.log("renders count", count);
-    // document.title = count + "****";
-  }, [title]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -34,7 +23,6 @@ const AddProduct = () => {
   };
 
   const handleChange = (e) => {
-    setCount(count + 1);
     setProduct((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
@@ -42,15 +30,6 @@ const AddProduct = () => {
   };
   return (
     <div>
-      <Typography variant="h3" children={count} />
-
-      <Button
-        variant="contained"
-        type="button"
-        children="Click count"
-        onClick={handleCount}
-      />
-
       <form onSubmit={handleSubmit}>
         <Paper elevation={10} style={{ padding: "30px" }}>
           <Typography
@@ -73,7 +52,6 @@ const AddProduct = () => {
           </div>
           <div style={{ marginBottom: "30px" }}>
             <TextField
-              ref={priceRef}
               name="price"
               variant="outlined"
               placeholder="Enter price "

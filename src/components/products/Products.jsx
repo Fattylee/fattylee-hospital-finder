@@ -43,7 +43,10 @@ import { AddProduct } from "./addProduct/AddProduct";
 
 const Products = () => {
   const dispatch = useDispatch();
-  const products = useSelector((state) => state.products);
+  const {
+    products,
+    auth: { isAuthenticated },
+  } = useSelector((state) => state);
 
   useEffect(() => {
     dispatch(fetchProduct());
@@ -57,16 +60,25 @@ const Products = () => {
             Products for sales
           </Typography>
           <Grid container justify="space-between">
-            <Grid container item md={8} spacing={2}>
+            <Grid container item md={isAuthenticated ? 8 : 12} spacing={2}>
               {products.map((product) => (
-                <Grid key={product._id} item xs={12} sm={6} lg={4} xl={3}>
+                <Grid
+                  key={product._id}
+                  item
+                  xs={12}
+                  sm={6}
+                  md={isAuthenticated ? 6 : 4}
+                  lg={isAuthenticated ? 4 : 3}
+                >
                   <Product key={product._id} product={product} />
                 </Grid>
               ))}
             </Grid>
-            <Grid item md={3}>
-              <AddProduct />
-            </Grid>
+            {isAuthenticated && (
+              <Grid item md={3} xs={12}>
+                <AddProduct />
+              </Grid>
+            )}
           </Grid>
         </>
       ) : (

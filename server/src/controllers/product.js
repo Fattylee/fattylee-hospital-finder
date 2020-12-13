@@ -7,7 +7,7 @@ export class ProductController {
     const { page, size } = req.query;
 
     const products = await Product.find()
-      .sort({ price: -1 })
+      .sort({ createdAt: -1 })
       .limit(size)
       .skip((page - 1) * size)
       .populate({

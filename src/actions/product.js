@@ -1,15 +1,9 @@
 import Axios from "axios";
-import { setOrClearAuthToken } from "../utils/api";
 import { setErrors } from "./errors";
 import { CREATE_PRODUCT, FETCH_PRODUCTS } from "./types";
 
 const axios = Axios.create({
   baseURL: "/api/v1/products",
-  // headers: {
-  // common: {
-  // authorization: localStorage.jwtToken,
-  // },
-  // },
 });
 
 export const fetchProduct = () => async (dispatch) => {
@@ -26,12 +20,8 @@ export const fetchProduct = () => async (dispatch) => {
 
 export const createProduct = (userData) => async (dispatch) => {
   try {
-    // const authorization = localStorage.jwtToken;
-    // setOrClearAuthToken();
-    const { data } = await axios.post("", userData, {
-      // headers: { authorization: "sa" },
-    });
-    dispatch({ type: CREATE_PRODUCT, payload: data });
+    const { data } = await Axios.post("/api/v1/products", userData);
+    dispatch({ type: CREATE_PRODUCT, payload: data.product });
   } catch (error) {
     dispatch(setErrors(error?.response?.data?.error));
     console.error(error.response.data);
