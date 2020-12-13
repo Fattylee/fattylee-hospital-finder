@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchProduct } from "../../actions/product";
 import { LocalDining } from "@material-ui/icons";
 import { AddProduct } from "./addProduct/AddProduct";
+import { ErrorDiv } from "../../common/ErrorDiv";
 
 /**
  * Redux cheatsheet
@@ -46,6 +47,7 @@ const Products = () => {
   const {
     products,
     auth: { isAuthenticated },
+    errors,
   } = useSelector((state) => state);
 
   useEffect(() => {
@@ -58,6 +60,8 @@ const Products = () => {
         <>
           <Typography align="center" variant="h3" gutterBottom>
             Products for sales
+            <ErrorDiv errorField={errors.error} />
+            <ErrorDiv errorField={errors.id} />
           </Typography>
           <Grid container justify="space-between">
             <Grid container item md={isAuthenticated ? 8 : 12} spacing={2}>
