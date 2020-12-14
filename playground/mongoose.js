@@ -96,8 +96,8 @@ const posts = await Post.findOne({ title: /so/ }).populate({
 // fifthUser.posts.push(newPost);
 
 (async () => {
-  const users = await User.find();
-  // console.log(users);
+  const { _id } = await User.findOne();
+  console.log(_id.getTimestamp());
 })();
 
 const { error, value } = Joi.object({
@@ -118,5 +118,5 @@ const { error, value } = Joi.object({
     .pattern(/lo/i)
     .message("faild to get lost"),
 }).validate({ name: "hm" });
-console.log(error);
-console.log(value);
+// console.log(error);
+// console.log(value);

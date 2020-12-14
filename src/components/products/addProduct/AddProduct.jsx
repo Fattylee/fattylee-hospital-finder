@@ -1,45 +1,66 @@
 import { Button, Paper, TextField, Typography } from "@material-ui/core";
-import React, { useState } from "react";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { createProduct } from "../../../actions/product";
+import { createProduct, editProduct } from "../../../actions/product";
 import { ErrorDiv } from "../../../common/ErrorDiv";
+import FileBase64 from "react-file-base64";
+import { useForm } from "./useForm";
+import { isEmpty } from "../../../utils/isEmpty";
+import { setErrors } from "../../../actions/errors";
 
-const initialState = { title: "", price: "" };
-const AddProduct = () => {
-  const [{ title, price }, setProduct] = useState(initialState);
+const initialState = { title: "", price: "", selectedFile: "" };
+
+const AddProduct = ({ setCurrentId, currentId }) => {
+  const [userData, handleChange, setProduct] = useForm(initialState);
+
   const dispatch = useDispatch();
-  const errors = useSelector((state) => state.errors);
+
+  const { errors, products } = useSelector((state) => state);
+
+  const product = products?.find((p) => p._id === currentId);
+
+  const titleRef = React.useRef(null);
+
+  React.useEffect(() => {
+    if (currentId) {
+      dispatch(setErrors({}));
+    }
+  }, [currentId, dispatch, setCurrentId]);
+
+  React.useEffect(() => {
+    titleRef.current.querySelector("input")?.focus();
+
+    if (product) setProduct(product);
+
+    // clear forms only if no currentId and no errors
+    isEmpty(errors) && !currentId && setProduct(initialState);
+  }, [product, setProduct, errors, currentId]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const userData = {
-      title,
-      price,
-    };
 
-    console.log(userData);
-    setProduct(initialState);
-    dispatch(createProduct(userData));
+    if (currentId) {
+      dispatch(editProduct(currentId, userData, setCurrentId));
+    } else {
+      dispatch(createProduct(userData));
+    }
   };
 
-  const handleChange = (e) => {
-    setProduct((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value,
-    }));
-  };
+  const { title, price } = userData;
+
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} autoComplete="off">
         <Paper elevation={10} style={{ padding: "30px" }}>
           <Typography
             variant="h5"
-            children="Add a new product"
+            children={currentId ? "Edit product" : "Add a new product"}
             style={{ marginBottom: "20px" }}
             align="center"
           />
           <div style={{ marginBottom: "30px" }}>
             <TextField
+              ref={titleRef}
               name="title"
               variant="outlined"
               placeholder="Enter name "
@@ -62,6 +83,9 @@ const AddProduct = () => {
             />
             <ErrorDiv errorField={errors.price} />
             <ErrorDiv errorField={errors.error} />
+          </div>
+          <div style={{ marginBottom: "30px" }}>
+            <FileBase64 multiple={false} onDone={handleChange} type="file" />
           </div>
           <Button
             type="submit"

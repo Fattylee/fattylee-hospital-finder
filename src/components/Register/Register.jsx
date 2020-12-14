@@ -40,7 +40,7 @@ const Register = (props) => {
         <Typography variant="h4" component="h2" gutterBottom align="center">
           Register for a Account
         </Typography>
-        <form onSubmit={handleSubmit} autoComplete="false" noValidate>
+        <form onSubmit={handleSubmit} autoComplete="off" noValidate>
           <div style={{ marginBottom: "20px" }}>
             <TextField
               label="username"

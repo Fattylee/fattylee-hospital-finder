@@ -1,6 +1,11 @@
 import Axios from "axios";
 import { setErrors } from "./errors";
-import { CREATE_PRODUCT, DELETE_PRODUCT, FETCH_PRODUCTS } from "./types";
+import {
+  CREATE_PRODUCT,
+  DELETE_PRODUCT,
+  EDIT_PRODUCT,
+  FETCH_PRODUCTS,
+} from "./types";
 
 const axios = Axios.create({
   baseURL: "/api/v1/products",
@@ -8,14 +13,11 @@ const axios = Axios.create({
 
 export const fetchProduct = () => async (dispatch) => {
   try {
-    const { data } = await axios.get("");
+    const { data } = await axios.get("", { params: { owner: true } });
     dispatch({ type: FETCH_PRODUCTS, payload: data.products });
-    dispatch(setErrors({}));
-  } catch (ex) {
-    console.log(
-      ex.response,
-      "===============from-error-fetchProduct==============="
-    );
+    dispatch(setErrors());
+  } catch (error) {
+    dispatch(setErrors(error.response.data.error));
   }
 };
 
@@ -23,19 +25,30 @@ export const createProduct = (userData) => async (dispatch) => {
   try {
     const { data } = await Axios.post("/api/v1/products", userData);
     dispatch({ type: CREATE_PRODUCT, payload: data.product });
+    dispatch(setErrors());
   } catch (error) {
     dispatch(setErrors(error?.response?.data?.error));
-    console.error(error.response.data);
   }
 };
 
 export const deleteProduct = (id) => async (dispatch) => {
   try {
-    const { data } = await Axios.delete("/api/v1/products/" + id);
-    console.log(data);
+    await Axios.delete("/api/v1/products/" + id);
     dispatch({ type: DELETE_PRODUCT, payload: id });
-    dispatch(setErrors({}));
+    dispatch(setErrors());
   } catch (error) {
     dispatch(setErrors(error?.response?.data?.error));
+  }
+};
+
+export const editProduct = (id, userData, setCurrentId) => async (dispatch) => {
+  try {
+    const { data } = await Axios.patch(`/api/v1/products/${id}`, userData);
+
+    dispatch({ type: EDIT_PRODUCT, payload: data.product });
+    dispatch(setErrors());
+    setCurrentId(null);
+  } catch (error) {
+    dispatch(setErrors(error.response.data.error));
   }
 };

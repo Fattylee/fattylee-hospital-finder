@@ -12,10 +12,11 @@ import {
 import { AddShoppingCart, Delete, Edit, MoreVert } from "@material-ui/icons";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
+import moment from "moment";
 import { deleteProduct } from "../../../actions/product";
 import { userStyles } from "./styles";
 
-const Product = ({ product }) => {
+const Product = ({ product, setCurrentId }) => {
   const classes = userStyles();
   const {
     auth: { isAuthenticated },
@@ -25,21 +26,38 @@ const Product = ({ product }) => {
   const handleDeleteProduct = (id) => {
     dispatch(deleteProduct(id));
   };
+
+  const handleEdit = (id) => {
+    setCurrentId(id);
+  };
+
   return (
     <Card>
       <CardHeader
-        avatar={<Avatar children={product?.owner?.username || "N"} />}
+        avatar={
+          <Avatar
+            aria-label={product?.owner?.username}
+            children={product?.owner?.username || "N"}
+          />
+        }
         title={product.title}
-        subheader={product.title}
+        subheader={moment(product.createdAt).fromNow()}
         action={
           <IconButton>
             <MoreVert />
           </IconButton>
         }
       />
-      <CardMedia className={classes.img} image={product.img || "kjsjwjs"} />
+      {product.selectedFile && (
+        <CardMedia
+          className={classes.img}
+          image={product.selectedFile || "empty"}
+        />
+      )}
       <CardContent align="justify">
-        <Typography variant="body1">{product.title}</Typography>
+        <Typography variant="body1" noWrap>
+          {product.title}{" "}
+        </Typography>
         <Typography>{product.price}</Typography>
       </CardContent>
       <CardActions className={classes.footer}>
@@ -53,7 +71,11 @@ const Product = ({ product }) => {
             >
               <Delete />
             </Button>
-            <Button variant="contained" color="primary">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleEdit.bind(null, product._id)}
+            >
               <Edit />
             </Button>
           </div>

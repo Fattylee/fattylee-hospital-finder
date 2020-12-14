@@ -1,12 +1,15 @@
-import { Container, Grid, Typography } from "@material-ui/core";
-import React, { useEffect } from "react";
+import {
+  CircularProgress,
+  Container,
+  Grid,
+  Typography,
+} from "@material-ui/core";
+import React, { useEffect, useState } from "react";
 import Product from "./product/Product";
 
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProduct } from "../../actions/product";
-import { LocalDining } from "@material-ui/icons";
 import { AddProduct } from "./addProduct/AddProduct";
-import { ErrorDiv } from "../../common/ErrorDiv";
 
 /**
  * Redux cheatsheet
@@ -47,9 +50,9 @@ const Products = () => {
   const {
     products,
     auth: { isAuthenticated },
-    errors,
   } = useSelector((state) => state);
 
+  const [currentId, setCurrentId] = useState(null);
   useEffect(() => {
     dispatch(fetchProduct());
   }, [dispatch]);
@@ -60,8 +63,6 @@ const Products = () => {
         <>
           <Typography align="center" variant="h3" gutterBottom>
             Products for sales
-            <ErrorDiv errorField={errors.error} />
-            <ErrorDiv errorField={errors.id} />
           </Typography>
           <Grid container justify="space-between">
             <Grid container item md={isAuthenticated ? 8 : 12} spacing={2}>
@@ -74,19 +75,28 @@ const Products = () => {
                   md={isAuthenticated ? 6 : 4}
                   lg={isAuthenticated ? 4 : 3}
                 >
-                  <Product key={product._id} product={product} />
+                  <Product
+                    key={product._id}
+                    product={product}
+                    setCurrentId={setCurrentId}
+                  />
                 </Grid>
               ))}
             </Grid>
             {isAuthenticated && (
               <Grid item md={3} xs={12}>
-                <AddProduct />
+                <AddProduct currentId={currentId} setCurrentId={setCurrentId} />
               </Grid>
             )}
           </Grid>
         </>
       ) : (
-        <LocalDining />
+        <CircularProgress
+          color="secondary"
+          variant="indeterminate"
+          size="250px"
+          thickness={4}
+        />
       )}
     </Container>
   );

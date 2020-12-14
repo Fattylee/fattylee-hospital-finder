@@ -130,14 +130,14 @@ export const MaterialUI = (props) => {
                     subheader="sub hereder here"
                     avatar={<Avatar>fatai</Avatar>}
                   />
-                  <CardMedia
+                  {/* <CardMedia
                     style={{
                       // height: "80px",
                       paddingTop: "56.25%",
                     }}
                     image={img1}
                     title="my fishyy"
-                  />
+                  /> */}
                   {/* <Divider /> */}
                   <CardContent>
                     <Typography variant="title1" component="h2" gutterBottom>
