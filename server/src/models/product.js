@@ -17,6 +17,7 @@ const productSchema = mongoose.Schema(
       required: true,
       default: 0,
     },
+    selectedFile: String,
   },
   { timestamps: true }
 );

@@ -50,15 +50,20 @@ export class ProductController {
       throw new BadRequest("Invalid object id");
     }
 
-    const { title, price } = req.body;
+    const { title, price, selectedfile } = req.body;
+    console.log(selectedfile, "+");
     const newProduct = new Product({
       title,
       owner,
       price,
+      selectedFile: selectedfile,
     });
+
+    // optionally populate owner field
     if ("owner" in req.query) {
       newProduct.populate("owner").execPopulate();
     }
+
     await newProduct.save();
 
     res.status(201).json({
@@ -79,5 +84,22 @@ export class ProductController {
       throw new Forbidden("Product does not belongs to you");
     await deletedProduct.deleteOne();
     res.json({ message: "successful", deletedProduct });
+  }
+
+  static async editProduct(req, res) {
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id))
+      throw new BadRequest({ id: `Invalid product id '${id}'` });
+
+    let product = await Product.findById(id);
+
+    if (!product) throw new NotFound("Product not found");
+
+    if (req.user.userId !== product.owner.toString())
+      throw new Forbidden("Product does not belongs to you");
+
+    product = await Product.findByIdAndUpdate(id, req.body, { new: true });
+
+    res.json({ message: "successful", product });
   }
 }

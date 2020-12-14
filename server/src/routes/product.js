@@ -22,4 +22,10 @@ router.post(
 
 router.delete("/:id", isAuthorized, ProductController.deleteProduct);
 
+router.patch(
+  "/:id",
+  isAuthorized,
+  ProductValidator.createProductValidator,
+  ProductController.editProduct
+);
 export const productRoute = router;

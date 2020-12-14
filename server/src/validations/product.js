@@ -18,7 +18,6 @@ export class ProductValidator extends BaseValidator {
 
   static async createProductValidator(req, res, next) {
     ProductValidator.lowerCaseReqProp(req, "query");
-    ProductValidator.lowerCaseReqProp(req, "body");
 
     const schema = Joi.object({
       title: Joi.string().trim().min(2).required(),
