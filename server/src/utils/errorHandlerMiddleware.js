@@ -22,7 +22,7 @@ export const mongooseErrorHandler = (err, req, res, next) => {
 export const errorHandler = (error, req, res, next) => {
   const baseErrorResponse = {
     statusText: "Internal Server Error",
-    message: "something went wrong",
+    message: "Something went wrong, try again.",
     method: req.method,
     path: req.path,
     statusCode: 500,
@@ -36,6 +36,7 @@ export const errorHandler = (error, req, res, next) => {
       statusCode: error.getCode()[0],
       statusText: error.getCode()[1],
       message: error.message,
+      error: error.data,
     };
 
     // log the error to the server
@@ -55,8 +56,8 @@ export const errorHandler = (error, req, res, next) => {
     error: { error: error.message },
   });
 
+  baseErrorResponse.error = { error: baseErrorResponse.message };
   if (process.env.NODE_ENV !== "production") {
-    baseErrorResponse.error = { error: error.message };
     baseErrorResponse.stack = error.stack;
   }
   res.status(500).json(baseErrorResponse);

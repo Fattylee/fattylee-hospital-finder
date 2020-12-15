@@ -23,9 +23,12 @@ export const fetchProduct = () => async (dispatch) => {
 
 export const createProduct = (userData) => async (dispatch) => {
   try {
-    const { data } = await Axios.post("/api/v1/products", userData);
+    const { data } = await Axios.post("/api/v1/products?owner", userData);
     dispatch({ type: CREATE_PRODUCT, payload: data.product });
     dispatch(setErrors());
+
+    // clear file inputs
+    document.querySelector("input[type='file']").value = "";
   } catch (error) {
     dispatch(setErrors(error?.response?.data?.error));
   }
@@ -43,7 +46,10 @@ export const deleteProduct = (id) => async (dispatch) => {
 
 export const editProduct = (id, userData, setCurrentId) => async (dispatch) => {
   try {
-    const { data } = await Axios.patch(`/api/v1/products/${id}`, userData);
+    const { data } = await Axios.patch(
+      `/api/v1/products/${id}?Owner`,
+      userData
+    );
 
     dispatch({ type: EDIT_PRODUCT, payload: data.product });
     dispatch(setErrors());

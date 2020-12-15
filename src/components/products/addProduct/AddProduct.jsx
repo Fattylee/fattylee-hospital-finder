@@ -29,6 +29,7 @@ const AddProduct = ({ setCurrentId, currentId }) => {
 
   React.useEffect(() => {
     titleRef.current.querySelector("input")?.focus();
+    // console.log((document.querySelector("input[type='file']").value = ""));
 
     if (product) setProduct(product);
 

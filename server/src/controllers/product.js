@@ -50,13 +50,9 @@ export class ProductController {
       throw new BadRequest("Invalid object id");
     }
 
-    const { title, price, selectedfile } = req.body;
-    console.log(selectedfile, "+");
     const newProduct = new Product({
-      title,
+      ...req.body,
       owner,
-      price,
-      selectedFile: selectedfile,
     });
 
     // optionally populate owner field
@@ -98,7 +94,9 @@ export class ProductController {
     if (req.user.userId !== product.owner.toString())
       throw new Forbidden("Product does not belongs to you");
 
-    product = await Product.findByIdAndUpdate(id, req.body, { new: true });
+    product = await Product.findByIdAndUpdate(id, req.body, {
+      new: true,
+    }).populate({ path: "owner" in req.query ? "owner" : "" });
 
     res.json({ message: "successful", product });
   }

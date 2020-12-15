@@ -10,6 +10,7 @@ import Product from "./product/Product";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProduct } from "../../actions/product";
 import { AddProduct } from "./addProduct/AddProduct";
+import { useStyles } from "./styles";
 
 /**
  * Redux cheatsheet
@@ -57,6 +58,8 @@ const Products = () => {
     dispatch(fetchProduct());
   }, [dispatch]);
 
+  const classes = useStyles();
+
   return (
     <Container>
       {products.length ? (
@@ -64,7 +67,12 @@ const Products = () => {
           <Typography align="center" variant="h3" gutterBottom>
             Products for sales
           </Typography>
-          <Grid container justify="space-between">
+          <Grid
+            container
+            justify="space-between"
+            spacing={2}
+            className={classes.root}
+          >
             <Grid container item md={isAuthenticated ? 8 : 12} spacing={2}>
               {products.map((product) => (
                 <Grid
@@ -91,12 +99,23 @@ const Products = () => {
           </Grid>
         </>
       ) : (
-        <CircularProgress
-          color="secondary"
-          variant="indeterminate"
-          size="250px"
-          thickness={4}
-        />
+        <div
+          elevation={20}
+          style={{
+            textAlign: "center",
+            display: "flex",
+            justifyContent: "center",
+            height: "70vh",
+            alignItems: "center",
+          }}
+        >
+          <CircularProgress
+            color="primary"
+            variant="indeterminate"
+            size="250px"
+            thickness={4}
+          />
+        </div>
       )}
     </Container>
   );

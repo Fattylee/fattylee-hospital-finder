@@ -15,7 +15,6 @@ import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import { deleteProduct } from "../../../actions/product";
 import { userStyles } from "./styles";
-// import placeholder from "../../../assets/images/placeholder.jpg";
 
 const Product = ({ product, setCurrentId }) => {
   const classes = userStyles();
@@ -44,7 +43,8 @@ const Product = ({ product, setCurrentId }) => {
             children={product?.owner?.username || "N"}
           />
         }
-        title={product.title}
+        // title={product.title}
+        title={<Typography children={product.title} noWrap />}
         subheader={moment(product.createdAt).fromNow()}
         action={
           <IconButton>
@@ -52,15 +52,12 @@ const Product = ({ product, setCurrentId }) => {
           </IconButton>
         }
       />
-      {
-        // <img src={placeholder} width="200px" />
-        <CardMedia
-          className={classes.img}
-          // component="img"
-          // height="100"
-          image={product.selectedFile || "/assets/images/placeholder.jpg"}
-        />
-      }
+
+      <CardMedia
+        className={classes.img}
+        image={product.selectedFile || "/assets/images/placeholder.jpg"}
+      />
+
       <CardContent align="justify">
         <Typography variant="body1" noWrap>
           {product.title}{" "}
