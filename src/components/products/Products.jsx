@@ -71,7 +71,7 @@ const Products = () => {
             container
             justify="space-between"
             spacing={2}
-            className={classes.root}
+            className={classes.reverseOrder}
           >
             <Grid container item md={isAuthenticated ? 8 : 12} spacing={2}>
               {products.map((product) => (

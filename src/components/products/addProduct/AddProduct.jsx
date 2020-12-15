@@ -20,6 +20,18 @@ const AddProduct = ({ setCurrentId, currentId }) => {
   const product = products?.find((p) => p._id === currentId);
 
   const titleRef = React.useRef(null);
+  const initialCount = React.useRef(products.length);
+
+  React.useEffect(() => {
+    if (initialCount.current > products.length) {
+      initialCount.current = products.length;
+      // dont loose focus
+    } else {
+      // focus on add or edit product action
+      titleRef.current.querySelector("input")?.focus();
+      initialCount.current = products.length;
+    }
+  }, [products, currentId]);
 
   React.useEffect(() => {
     if (currentId) {
@@ -28,14 +40,11 @@ const AddProduct = ({ setCurrentId, currentId }) => {
   }, [currentId, dispatch, setCurrentId]);
 
   React.useEffect(() => {
-    titleRef.current.querySelector("input")?.focus();
-    // console.log((document.querySelector("input[type='file']").value = ""));
-
     if (product) setProduct(product);
 
     // clear forms only if no currentId and no errors
     isEmpty(errors) && !currentId && setProduct(initialState);
-  }, [product, setProduct, errors, currentId]);
+  }, [product, setProduct, errors, currentId, products]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
