@@ -15,11 +15,15 @@ import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import { deleteProduct } from "../../../actions/product";
 import { userStyles } from "./styles";
+// import placeholder from "../../../assets/images/placeholder.jpg";
 
 const Product = ({ product, setCurrentId }) => {
   const classes = userStyles();
   const {
-    auth: { isAuthenticated },
+    auth: {
+      isAuthenticated,
+      user: { userId },
+    },
   } = useSelector((state) => state);
   const dispatch = useDispatch();
 
@@ -48,12 +52,15 @@ const Product = ({ product, setCurrentId }) => {
           </IconButton>
         }
       />
-      {product.selectedFile && (
+      {
+        // <img src={placeholder} width="200px" />
         <CardMedia
           className={classes.img}
-          image={product.selectedFile || "empty"}
+          // component="img"
+          // height="100"
+          image={product.selectedFile || "/assets/images/placeholder.jpg"}
         />
-      )}
+      }
       <CardContent align="justify">
         <Typography variant="body1" noWrap>
           {product.title}{" "}
@@ -61,7 +68,7 @@ const Product = ({ product, setCurrentId }) => {
         <Typography>{product.price}</Typography>
       </CardContent>
       <CardActions className={classes.footer}>
-        {isAuthenticated && (
+        {isAuthenticated && userId === product?.owner?._id && (
           <div>
             <Button
               className={classes.space}
