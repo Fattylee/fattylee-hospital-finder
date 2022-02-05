@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchProduct } from "../../actions/product";
 import { AddProduct } from "./addProduct/AddProduct";
 import { useStyles } from "./styles";
+import Axios from "axios";
 
 /**
  * Redux cheatsheet
@@ -59,7 +60,19 @@ const Products = () => {
   }, [dispatch]);
 
   const classes = useStyles();
+  const [img, setImg] = useState(null);
+  React.useEffect(() => {
+    Axios.get("/create")
+      .then(({ data }) => {
+        // console.log(data);
+        const blobImg = new Blob(data);
 
+        setImg(blobImg);
+      })
+      .catch((error) => {
+        console.error(error.response);
+      });
+  });
   return (
     <Container>
       {products.length ? (
@@ -67,6 +80,7 @@ const Products = () => {
           <Typography align="center" variant="h3" gutterBottom>
             Products for sales
           </Typography>
+          <img src={img} alt="test me" />
           <Grid
             container
             justify="space-between"

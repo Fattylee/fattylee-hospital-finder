@@ -41,7 +41,8 @@ export class ProductController {
 
   static async createProduct(req, res) {
     const { userId } = req.user || {};
-
+    console.log(req.body);
+    return res.json(req.body);
     if (!userId) {
       throw new Forbidden("Unauthorized token, please re-login");
     }

@@ -95,7 +95,12 @@ const AddProduct = ({ setCurrentId, currentId }) => {
             <ErrorDiv errorField={errors.error} />
           </div>
           <div style={{ marginBottom: "30px" }}>
-            <FileBase64 multiple={false} onDone={handleChange} type="file" />
+            <FileBase64
+              multiple={false}
+              onDone={handleChange}
+              type="file"
+              // required
+            />
           </div>
           <Button
             type="submit"
