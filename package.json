@@ -46,7 +46,7 @@
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "tailwindcss": "^2.0.2",
-    "validator": "^13.1.17"
+    "validator": "^13.7.0"
   },
   "eslintConfig": {
     "extends": "react-app"
